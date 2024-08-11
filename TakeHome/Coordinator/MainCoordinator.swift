@@ -25,7 +25,13 @@ class MainCoordinator: Coordinator {
     }
     
     func presentBirdDetailSheet(for bird: Bird) {
-        let detailViewController = BirdDetailViewController(bird: bird)
+        let detailViewController = BirdDetailViewController()
+        let repository = FirebaseBirdDetailRepository()
+        let fetchDetailBirdUseCases = FetchBirdDetailsUseCaseImpl(repository: repository)
+        let viewModel = BirdDetailViewModel(bird: bird, fetchBirdDetailsUseCase: fetchDetailBirdUseCases)
+        detailViewController.bird = bird
+        detailViewController.viewModel = viewModel
+        detailViewController.coordinator = self
         detailViewController.modalPresentationStyle = .pageSheet
         navigationController.present(detailViewController, animated: true, completion: nil)
     }

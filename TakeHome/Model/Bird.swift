@@ -5,7 +5,7 @@
 //  Created by Josue Hernandez on 2024-08-09.
 //
 
-struct Bird {
+struct Bird: Codable, Equatable {
     let id: String
     let nameSpanish: String
     let nameEnglish: String
@@ -13,4 +13,10 @@ struct Bird {
     let thumbImageUrl: String
     let fullImageUrl: String
     let sortIndex: Int
+    var notes: [Note]?
+
+    struct Note: Codable, Equatable {
+        let userID: String
+        let text: String
+    }
 }

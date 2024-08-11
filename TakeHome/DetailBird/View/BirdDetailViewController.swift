@@ -6,14 +6,20 @@
 //
 
 import UIKit
+import Combine
 import SDWebImage
 
 class BirdDetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    let bird: Bird
+    var viewModel: BirdDetailViewModel!
+    var cancellables = Set<AnyCancellable>()
+    weak var coordinator: MainCoordinator?
+    
+    var bird: Bird?
     var notes: [String] = [] // This will store the list of community notes
+    
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -69,25 +75,28 @@ class BirdDetailViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Initializers
-    
-    init(bird: Bird) {
-        self.bird = bird
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         setupViews()
-        configure(with: bird)
+//        configure(with: bird)
+        bindViewModel()
+        viewModel.reloadBirdData()
+    }
+    
+    
+    private func bindViewModel() {
+        viewModel.$bird
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] bird in
+                // Update UI with bird details
+                print("fjhfjshjs")
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Setup Methods
